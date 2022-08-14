@@ -1,10 +1,29 @@
 package homeWork;
 
+import java.util.Objects;
+
 public class User {
     private String login;
     private String name;
     private int age;
     private int bonuses;
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "login='" + login + '\'' +
+                ", name='" + name + '\'' +
+                ", age=" + age +
+                ", bonuses=" + bonuses +
+                '}';
+    }
+
+    public User(String login, String name, int age, int bonuses) {
+        this.login = login;
+        this.name = name;
+        this.age = age;
+        this.bonuses = bonuses;
+    }
 
     public String getLogin() {
         return login;
@@ -48,5 +67,18 @@ public class User {
             throw new IllegalArgumentException("Бонусы не могут иметь отрицательное значение");
         }
         this.bonuses = bonuses;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return age == user.age && bonuses == user.bonuses && login.equals(user.login) && name.equals(user.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(login, name, age, bonuses);
     }
 }
