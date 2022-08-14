@@ -18,7 +18,7 @@ public class WriteJson {
 
         writeUsersWhithKeyboard(writerToFile, readerKeyboard);
 
-        writeUsersWhithFile(readerFromFile);
+        //writeUsersWhithFile(readerFromFile);
     }
 
     private static void writeUsersWhithFile(BufferedReader readerFromFile) throws IOException {
