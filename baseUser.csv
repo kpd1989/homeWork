@@ -1,4 +1,3 @@
-user1, Иван, 20, 120
-user2, Святослав, 28, 999
-user3, Ипполит, 41, 100500
-
+{"login":"login1","name":"Valera","age":20,"bonuses":10}%
+{"login":"login2","name":"Petia","age":18,"bonuses":10}%
+{"login":"login3","name":"Serafim","age":120,"bonuses":10}%

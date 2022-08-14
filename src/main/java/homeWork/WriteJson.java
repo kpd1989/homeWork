@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class WriteJson {
@@ -11,19 +13,32 @@ public class WriteJson {
 
     public static void main(String[] args) throws IOException {
 
-        BufferedWriter writerToFile = new BufferedWriter(new FileWriter("baseUser1.csv"));
+        BufferedWriter writerToFile = new BufferedWriter(new FileWriter("baseUser.csv"));
         BufferedReader readerKeyboard = new BufferedReader(new InputStreamReader(System.in));
-        BufferedReader readerFromFile = new BufferedReader(new FileReader("baseUser1.csv"));
-
+        BufferedReader readerFromFile = new BufferedReader(new FileReader("baseUser.csv"));
 
         writeUsersWhithKeyboard(writerToFile, readerKeyboard);
 
-        //writeUsersWhithFile(readerFromFile);
+        writeUsersWhithFile(readerFromFile);
     }
 
     private static void writeUsersWhithFile(BufferedReader readerFromFile) throws IOException {
 
-        System.out.println(gson.fromJson(readerFromFile.readLine(), User.class));
+       List<String> listString = new ArrayList<>();
+
+       while (true) {
+            String line = readerFromFile.readLine();
+            if (line == null) {
+                break;
+            }
+            String[] strings = line.trim().split("%");
+            listString.addAll(List.of(strings));
+        }
+        for (String s : listString) {
+            User user1 = gson.fromJson(s, User.class);
+            System.out.println(user1);
+
+        }
     }
 
     private static void writeUsersWhithKeyboard(BufferedWriter writerToFile, BufferedReader readerKeyboard) throws IOException {
@@ -47,7 +62,7 @@ public class WriteJson {
 
                 user.setBonuses(10); // Презент за регистрацию в размере 10 бонусов
 
-                writerToFile.write(gson.toJson(user));
+                writerToFile.write(gson.toJson(user)+"%"+"\n");
                 writerToFile.flush();
 
                 continue;
