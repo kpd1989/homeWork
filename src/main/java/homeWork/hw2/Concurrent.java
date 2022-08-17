@@ -24,7 +24,7 @@ public class Concurrent {
                 }
 
             }).start();
-            Thread.sleep(300);
+            Thread.sleep(200);
         }
 
         writerToFile.write(String.valueOf(sqrtList));
