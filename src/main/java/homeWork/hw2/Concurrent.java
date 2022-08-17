@@ -7,30 +7,43 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+
 public class Concurrent {
-    private static double number = 1;
+
     private static List<String> sqrtList = Collections.synchronizedList(new ArrayList<>());
+    private static final int numberTread = 10; // количество потоков
+    //  private static Object lock = new Object();
 
     public static void main(String[] args) throws IOException, InterruptedException {
         long startTime = System.currentTimeMillis();
         BufferedWriter writerToFile = new BufferedWriter(new FileWriter("sqrtList.csv"));
+        ArrayList<Thread> threads = new ArrayList<>();
 
-        for (int threadNumber = 0; threadNumber < 10; ++threadNumber) {
-            new Thread(() -> {
+        for (int threadNumber = 0; threadNumber < numberTread; ++threadNumber) {
 
-                for (int i = 0; i < 100_000; ++i) {
+            int incrementWorkRange = (1_000_000 * threadNumber) / numberTread;
+
+            Thread thread = new Thread(() -> {
+                //synchronized (lock) {
+                for (int i = 1; i <= 100_000; ++i) {
+
+                    double number = incrementWorkRange + i;
                     sqrtList.add(number + " - " + Math.sqrt(number) + "\n");
-                    number++;
                 }
+                //}
+            });
 
-            }).start();
-            Thread.sleep(200);
+            threads.add(thread);
+            thread.start();
+        }
+        for (Thread thread : threads) {
+            thread.join();
         }
 
         writerToFile.write(String.valueOf(sqrtList));
         writerToFile.flush();
 
         long end = System.currentTimeMillis();
-        System.out.println("Took " + (end - startTime));
+        System.out.println("Took " + (end - startTime) + " ms.");
     }
 }
