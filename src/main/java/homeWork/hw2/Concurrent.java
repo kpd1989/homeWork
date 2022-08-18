@@ -10,11 +10,12 @@ import java.util.List;
 
 public class Concurrent {
 
-    private static List<String> sqrtList = Collections.synchronizedList(new ArrayList<>());
+    private static List<String> sqrtList = Collections.synchronizedList(new ArrayList<>(1000000));
     private static final int numberTread = 10; // количество потоков
-    //  private static Object lock = new Object();
 
     public static void main(String[] args) throws IOException, InterruptedException {
+        { for (int i = 0; i < 1000000; i++) sqrtList.add("null");}
+
         long startTime = System.currentTimeMillis();
         BufferedWriter writerToFile = new BufferedWriter(new FileWriter("sqrtList.csv"));
         ArrayList<Thread> threads = new ArrayList<>();
@@ -24,15 +25,14 @@ public class Concurrent {
             int incrementWorkRange = (1_000_000 * threadNumber) / numberTread;
 
             Thread thread = new Thread(() -> {
-                //synchronized (lock) {
+
                 for (int i = 1; i <= 100_000; ++i) {
 
                     double number = incrementWorkRange + i;
-                    sqrtList.add(number + " - " + Math.sqrt(number) + "\n");
+                    sqrtList.set((int) number-1, number + " - " + Math.sqrt(number) + "\n");
                 }
-                //}
-            });
 
+            });
             threads.add(thread);
             thread.start();
         }
