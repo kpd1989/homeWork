@@ -9,6 +9,7 @@ import java.util.ArrayList;
 public class ConcurrentVers2 {
     private static String [] sqrtList = new String[1000000];
     private static final int numberTread = 10; // количество потоков
+    private static Object lock = new Object();
 
     public static void main(String[] args) throws IOException, InterruptedException {
 
@@ -23,10 +24,12 @@ public class ConcurrentVers2 {
             Thread thread = new Thread(() -> {
 
                     for (int i = 1; i <= 100_000; ++i) {
-                        int number = incrementWorkRange + i;
-                        String sqrtNumber = number + " - " + Math.sqrt(number)+ "\n";
+                          int number = incrementWorkRange + i;
+                            String sqrtNumber = number + " - " + Math.sqrt(number) + "\n";
 
-                        sqrtList[(number-1)]= sqrtNumber;
+                            synchronized (lock) {
+                            sqrtList[(number - 1)] = sqrtNumber;
+                        }
                 }
 
             });
@@ -38,13 +41,14 @@ public class ConcurrentVers2 {
         for (Thread thread: threads) {
             thread.join();
         }
+        long end = System.currentTimeMillis();
+        System.out.println("Took " + (end - startTime) + " ms.");
 
         for (String thread: sqrtList) {
             writerToFile.write(thread);
             writerToFile.flush();
         }
 
-        long end = System.currentTimeMillis();
-        System.out.println("Took " + (end - startTime) + " ms.");
+
     }
 }
